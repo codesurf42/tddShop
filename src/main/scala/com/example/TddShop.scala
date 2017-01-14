@@ -27,21 +27,25 @@ class Cart {
     case Nil => items
   }
 
-  def priceInPoundsPences(priceInPences: Int): String = f"${priceInPences.toFloat / 100}%1.2f"
+  def priceInPoundsPences(priceInPences: Int): String = f"${BigDecimal(priceInPences) / 100}%1.2f"
 }
 
 object Promotions {
   def b1g1fApple(l1: List[Item]): List[Item] = {
     val item = new Item("Apple")
-    val my = l1.filter(_.name == item.name)
-    val other = l1.filterNot(_ == item)
-    my.take((my.size - 1) / 2 + 1) ++ other
+    val (my, other) = l1.partition(_.name == item.name)
+    val dbl = my.size / 2
+    val rest = my.size - (dbl * 2)
+    val take = dbl + rest
+    my.take(take) ++ other
   }
 
   def b3f2Orange(l1: List[Item]): List[Item] = {
     val item = new Item("Orange")
-    val my = l1.filter(_.name == item.name)
-    val other = l1.filterNot(_ == item)
-    my.take((my.size - 2) / 3 * 2 + 2) ++ other
+    val (my, other) = l1.partition(_.name == item.name)
+    val triples = my.size / 3
+    val rest = my.size - (triples * 3)
+    val take = triples * 2 + rest
+    my.take(take) ++ other
   }
 }
